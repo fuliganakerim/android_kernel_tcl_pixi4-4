@@ -272,8 +272,13 @@ static int inet_create(struct net *net, struct socket *sock, int protocol,
 	int try_loading_module = 0;
 	int err;
 
+<<<<<<< HEAD
 	if (!current_has_network())
 		return -EACCES;
+=======
+	if (protocol < 0 || protocol >= IPPROTO_MAX)
+		return -EINVAL;
+>>>>>>> e60ccfd... net: add validation for the socket syscall protocol argument
 
 	sock->state = SS_UNCONNECTED;
 
