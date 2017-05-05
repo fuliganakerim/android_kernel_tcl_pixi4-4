@@ -24,6 +24,7 @@ make pixi4_4_8g1g_defconfig
 #make -C $PWD O=$PWD/out ARCH=arm pixi4_4_8g1g_defconfig
 #make -j$(getconf _NPROCESSORS_ONLN) -C $PWD O=$PWD/out ARCH=arm
 
+repack(){
 if [-f repack.conf ]
 	then
 	  source "repack.conf"
@@ -39,3 +40,4 @@ cp ../kernel/arch/arm/boot/zImage-dtb boot/split_img/boot.img-zImage
 rm -r ramdisk-new.cpio.gz
 mv image-new.img boot_$time.img
 echo -e "Your new boot is boot_$time.";
+}
