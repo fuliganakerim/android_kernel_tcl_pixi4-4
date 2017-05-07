@@ -1,4 +1,5 @@
 #!/bin/bash
+#Original script by hellsgod and modified with function from MSF Jarvis
 
 # Bash colors
 green='\033[01;32m'
