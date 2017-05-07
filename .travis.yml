@@ -16,7 +16,7 @@ script:
 
 deploy:
   provider: releases
-  api_key: "0d4eec2d62c8c7f54168e752ba3265a2a38a81b0"
+  api_key: "$GIT_OAUTH_TOKEN_KIRITO9"
   file: "$PWD/arch/arm/boot/zImage-dtb"
   skip_cleanup: true
   on:
