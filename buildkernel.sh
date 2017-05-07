@@ -1,43 +1,181 @@
 #!/bin/bash
 
-# Get kernel configuration
-if [ -f kernel.conf ]
-  then
-    source "kernel.conf"
-  else
-	echo "Kernel configuration file (kernel.conf) does not exist!"
-	exit -1
-fi
+# Bash colors
+green='\033[01;32m'
+red='\033[01;31m'
+cyan='\033[01;36m'
+blue='\033[01;34m'
+blink_red='\033[05;31m'
+restore='\033[0m'
 
-export PATH=$PATH:$TOOLCHAIN_PATH
-export CROSS_COMPILE=arm-eabi-
+clear
 
-#cd ~/android/kernel/4034/kernel
-#export CROSS_COMPILE=~/android/toolchain/arm-eabi-4.8/bin/arm-eabi-
-export USE_CCACHE=1
-export ARCH=arm ARCH_MTK_PLATFORM=mt6580
-#make clean 
-make pixi4_4_8g1g_defconfig
-./build.sh
+# Resources
+THREAD="-j4"
+KERNEL="zImage-dtb"
+DEFCONFIG="pixi4_4_8g1g_defconfig"
 
+# BlackThunder Kernel Details
+KERNEL_NAME="BlackThunder"
+VER="v1.1"
+BASE_BT_VER="BT"
+BT_VER="$BASE_BT_VER$VER"
 
-#make -C $PWD O=$PWD/out ARCH=arm pixi4_4_8g1g_defconfig
-#make -j$(getconf _NPROCESSORS_ONLN) -C $PWD O=$PWD/out ARCH=arm
+# Vars
+export ARCH=arm
+export KBUILD_BUILD_USER=kirito9
+export KBUILD_BUILD_HOST=teampanther
+export CROSS_COMPILE=~/android/toolchain/arm-eabi-4.8/bin/arm-eabi-
 
-repack(){
-if [-f repack.conf ]
-	then
-	  source "repack.conf"
-	else 
-	  echo "Repack configuration file (repack.conf) does not exist!"
-	  exit -1
-fi
+# Paths
+KERNEL_DIR=`pwd`
+RESOURCE_DIR="/home/kirito9/android/kernel/4034"
+ANYKERNEL_DIR="$RESOURCE_DIR/BT-pixi4_4-AnyKernel2"
+REPACK_DIR="$ANYKERNEL_DIR"
+ZIP_MOVE="$RESOURCE_DIR/BT-releases/pixi4_4/"
+ZIMAGE_DIR="$KERNEL_DIR/arch/arm/boot"
 
-time=$(date +"%Y%m%d-%H%M");
-cd $PWD/boot
-cp ../kernel/arch/arm/boot/zImage-dtb boot/split_img/boot.img-zImage
-./repackimg.sh
-rm -r ramdisk-new.cpio.gz
-mv image-new.img boot_$time.img
-echo -e "Your new boot is boot_$time.";
+# Functions
+function clean_all {
+		rm -rf $REPACK_DIR/zImage-dtb
+		rm -rf $ZIMAGE_DIR/$KERNEL
+		make clean && make mrproper
 }
+
+function make_kernel {
+		make $DEFCONFIG
+		make $THREAD
+		cp -vr $ZIMAGE_DIR/$KERNEL $REPACK_DIR
+}
+
+function make_zip {
+		cd $REPACK_DIR
+		zip -9 -r `echo $BT_VER`.zip .
+		mv  `echo $BT_VER`.zip $ZIP_MOVE
+		cd $KERNEL_DIR
+}
+
+
+function push_and_flash {
+  adb push "$ZIP_MOVE"/${BT_VER}.zip /sdcard/
+  adb shell twrp install "/sdcard/${BT_VER}.zip"
+}
+
+DATE_START=$(date +"%s")
+
+echo -e "${green}"
+echo "BlackThunder Kernel Creation Script:"
+echo
+
+echo "---------------"
+echo "Kernel Version:"
+echo "---------------"
+
+echo -e "${red}"; echo -e "${blink_red}"; echo "$BT_VER"; echo -e "${restore}";
+
+echo -e "${green}"
+echo "-----------------"
+echo "Making BlackThunder Kernel:"
+echo "-----------------"
+echo -e "${restore}"
+
+while read -p "Please choose your option: [1]Clean-build // [2]Dirty-build // [3]Make flashable zip // [4]Flash to device // [5]Abort " cchoice
+do
+case "$cchoice" in
+	1 )
+		echo -e "${green}"
+		echo
+		echo "[..........Cleaning up..........]"
+		echo
+		echo -e "${restore}"
+		clean_all
+		echo -e "${green}"
+		echo
+		echo "[....Building `echo $BT_VER`....]"
+		echo
+		echo -e "${restore}"
+		make_kernel
+		echo -e "${green}"
+		echo
+		echo "[....Make `echo $BT_VER`.zip....]"
+		echo
+		echo -e "${restore}"
+		make_zip
+		echo -e "${green}"
+		echo
+		echo "[.....Moving `echo $BT_VER`.....]"
+		echo
+		echo -e "${restore}"
+		break
+		;;
+	2 )
+		echo -e "${green}"
+		echo
+		echo "[....Building `echo $BT_VER`....]"
+		echo
+		echo -e "${restore}"
+		make_kernel
+		echo -e "${green}"
+		echo
+		echo "[....Make `echo $BT_VER`.zip....]"
+		echo
+		echo -e "${restore}"
+		make_zip
+		echo -e "${green}"
+		echo
+		echo "[.....Moving `echo $BT_VER`.....]"
+		echo
+		echo -e "${restore}"
+		break
+		;;
+	3 )
+		echo -e "${green}"
+		echo
+		echo "[....Make `echo $BT_VER`.zip....]"
+		echo
+		echo -e "${restore}"
+		make_zip
+		echo -e "${green}"
+		echo
+		echo "[.....Moving `echo $BT_VER`.....]"
+		echo
+		echo -e "${restore}"
+		break
+		;;
+	4 )
+		echo -e "${green}"
+		echo
+		echo "[....Pushing and Flashing `echo $BT_VER`.zip....]"
+		echo
+		echo -e "${restore}"
+		push_and_flash
+		echo -e "${green}"
+		echo
+		echo "[.....Pushing and Flashing `echo $BT_VER`.....]"
+		echo
+		echo -e "${restore}"
+		break
+		;;		
+	5 )
+		break
+		;;
+	* )
+		echo -e "${red}"
+		echo
+		echo "Invalid try again!"
+		echo
+		echo -e "${restore}"
+		;;
+esac
+done
+
+echo -e "${green}"
+echo "-------------------"
+echo "Build Completed in:"
+echo "-------------------"
+echo -e "${restore}"
+
+DATE_END=$(date +"%s")
+DIFF=$(($DATE_END - $DATE_START))
+echo "Time: $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
+echo
