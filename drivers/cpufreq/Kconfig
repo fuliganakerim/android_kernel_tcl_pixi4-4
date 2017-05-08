@@ -123,6 +123,11 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASS2
 	help
 	Use the CPUFreq governor 'smartassV2' as default.
 
+config CPU_FREQ_DEFAULT_GOV_THUNDERX
+	bool "thunderx"
+	select CPU_FREQ_GOV_THUNDERX
+	help
+
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -210,6 +215,12 @@ config CPU_FREQ_GOV_SMARTASS2
 	help
 	'smartassV2' - a "smart" governor
 	If in doubt, say N.        
+
+config CPU_FREQ_GOV_THUNDERX
+	tristate "'thunderx' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'thunderx' - a "power optimized" governor for Mediatek SoCs
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
