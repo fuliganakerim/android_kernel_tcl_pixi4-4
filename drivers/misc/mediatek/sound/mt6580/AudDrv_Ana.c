@@ -76,20 +76,9 @@ void Ana_Set_Reg(uint32 offset, uint32 value, uint32 mask)
 	PRINTK_ANA_REG("Ana_Set_Reg offset= 0x%x , value = 0x%x mask = 0x%x\n", offset,
 		       value, mask);
 #ifdef AUDIO_USING_WRAP_DRIVER
-	Reg_Value = Ana_Get_Reg(offset);	
+	Reg_Value = Ana_Get_Reg(offset);
 	Reg_Value &= (~mask);
-#ifdef CONFIG_THUNDERSONIC_ENGINE_GPL
-	if(((offset == AUDTOP_CON5) && lockhp ) ||
-		((offset == SPK_CON9) && lockspk)) {
-		return;
-	}
-	else {
-#endif
-		Reg_Value |= (value & mask);
-#ifdef CONFIG_THUNDERSONIC_ENGINE_GPL
-	}
-#endif	
-	
+	Reg_Value |= (value & mask);
 	ret = pwrap_write(offset, Reg_Value);
 	Reg_Value = Ana_Get_Reg(offset);
 	if ((Reg_Value & mask) != (value & mask))
