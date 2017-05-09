@@ -69,12 +69,10 @@ include/generated/asm-offsets.h
 include/generated/autoconf.h
 include/generated/bounds.h
 include/generated/compile.h
-include/generated/utsrelease.h
 include/config/auto.conf
 include/config/kernel.release
 include/config/tristate.conf
 include/generated/autoconf.h
-include/generated/compile.h
 include/generated/utsrelease.h
 
 scripts/basic/bin2c
@@ -128,7 +126,6 @@ net/wireless/regdb.c
 security/selinux/av_permissions.h
 security/selinux/flask.h
 usr/gen_init_cpio
-
 
 # stgit generated dirs
 patches-*
