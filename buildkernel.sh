@@ -47,6 +47,7 @@ function make_kernel {
 		make $DEFCONFIG
 		make $THREAD
 		cp -vr $ZIMAGE_DIR/$KERNEL $REPACK_DIR
+		mv $REPACK_DIR/$KERNEL $REPACK_DIR/zImage
 }
 
 function make_zip {
@@ -55,7 +56,6 @@ function make_zip {
 		mv  `echo $BT_VER`.zip $ZIP_MOVE
 		cd $KERNEL_DIR
 }
-
 
 function push_and_flash {
   adb push "$ZIP_MOVE"/${BT_VER}.zip /sdcard/
@@ -80,7 +80,7 @@ echo "Making BlackThunder Kernel:"
 echo "-----------------"
 echo -e "${restore}"
 
-while read -p "Please choose your option: [1]Clean-build // [2]Dirty-build // [3]Make flashable zip // [4]Flash to device // [5]Abort " cchoice
+while read -p "Please choose your option: [1]Clean-build // [2]Dirty-build // [3]Clean source // [4]Make flashable zip // [5]Flash to device // [6]Abort " cchoice
 do
 case "$cchoice" in
 	1 )
@@ -96,15 +96,17 @@ case "$cchoice" in
 		echo
 		echo -e "${restore}"
 		make_kernel
-		echo -e "${green}"
+		if [ -f $ZIMAGE_DIR/$KERNEL ];
+		then
+			make_zip
+		else
+			echo -e "${red}"
+			echo
+			echo "Kernel build failed, check your logs!"
+			echo
+			echo -e "${restore}"
+		fi
 		echo
-		echo "[....Make `echo $BT_VER`.zip....]"
-		echo
-		echo -e "${restore}"
-		make_zip
-		echo -e "${green}"
-		echo
-		echo "[.....Moving `echo $BT_VER`.....]"
 		echo
 		echo -e "${restore}"
 		break
@@ -116,15 +118,17 @@ case "$cchoice" in
 		echo
 		echo -e "${restore}"
 		make_kernel
-		echo -e "${green}"
-		echo
-		echo "[....Make `echo $BT_VER`.zip....]"
-		echo
-		echo -e "${restore}"
-		make_zip
-		echo -e "${green}"
-		echo
-		echo "[.....Moving `echo $BT_VER`.....]"
+		if [ -f $ZIMAGE_DIR/$KERNEL ];
+		then
+			make_zip
+		else
+			echo -e "${red}"
+			echo
+			echo "Kernel build failed, check your logs!"
+			echo
+			echo -e "${restore}"
+		fi
+		echo		
 		echo
 		echo -e "${restore}"
 		break
@@ -132,6 +136,18 @@ case "$cchoice" in
 	3 )
 		echo -e "${green}"
 		echo
+		echo "[..........Cleaning up..........]"
+		echo
+		echo -e "${restore}"
+		clean_all
+		echo -e "${green}"
+		echo
+		echo -e "${restore}"		
+		break
+		;;
+	4 )
+		echo -e "${green}"
+		echo
 		echo "[....Make `echo $BT_VER`.zip....]"
 		echo
 		echo -e "${restore}"
@@ -143,7 +159,7 @@ case "$cchoice" in
 		echo -e "${restore}"
 		break
 		;;
-	4 )
+	5 )
 		echo -e "${green}"
 		echo
 		echo "[....Pushing and Flashing `echo $BT_VER`.zip....]"
@@ -157,7 +173,7 @@ case "$cchoice" in
 		echo -e "${restore}"
 		break
 		;;		
-	5 )
+	6 )
 		break
 		;;
 	* )
@@ -170,11 +186,16 @@ case "$cchoice" in
 esac
 done
 
-echo -e "${green}"
-echo "-------------------"
-echo "Build Completed in:"
-echo "-------------------"
-echo -e "${restore}"
+
+if [ -f $ZIMAGE_DIR/$KERNEL ];
+then
+	echo -e "${green}"
+	echo "-------------------"
+	echo "Build Completed in:"
+	echo "-------------------"
+	echo -e "${restore}"
+fi
+
 
 DATE_END=$(date +"%s")
 DIFF=$(($DATE_END - $DATE_START))
