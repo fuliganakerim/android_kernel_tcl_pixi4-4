@@ -147,7 +147,7 @@ static ssize_t power_suspend_version_show(struct kobject *kobj,
 }
 
 static struct kobj_attribute power_suspend_attribute =
-        __ATTR(power_suspend_state, 0666,
+        __ATTR(power_suspend_state, 0644,
 		power_suspend_show,
 		power_suspend_store);
 
