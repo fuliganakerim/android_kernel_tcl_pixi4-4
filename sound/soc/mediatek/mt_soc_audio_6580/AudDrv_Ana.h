@@ -124,6 +124,9 @@
 #define AUDTOP_CON2                 (PMIC_REG_BASE + 0x704)
 #define AUDTOP_CON3                 (PMIC_REG_BASE + 0x706)
 #define AUDTOP_CON4                 (PMIC_REG_BASE + 0x708)
+#ifdef  AUDTOP_CON5
+#undef  AUDTOP_CON5
+#endif
 #define AUDTOP_CON5                 (PMIC_REG_BASE + 0x70A)
 #define AUDTOP_CON6                 (PMIC_REG_BASE + 0x70C)
 #define AUDTOP_CON7                 (PMIC_REG_BASE + 0x70E)

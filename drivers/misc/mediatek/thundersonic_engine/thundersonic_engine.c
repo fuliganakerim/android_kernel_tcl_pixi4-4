@@ -23,7 +23,7 @@
 #include <linux/kernel.h>
 #include <linux/kallsyms.h>
 #include <mach/upmu_hw.h>
-#include "../sound/mt6580/AudDrv_Common.h"
+#include "../../../../sound/soc/mediatek/mt_soc_audio_6580/AudDrv_Common.h"
 #include "thundersonic_defs.h"
 
 #define THUNDERSONIC "thundersonic"
@@ -45,7 +45,7 @@ static void setHPLGain(void) {
 	mask = 0x00007000 | 0xffff0000;
 	index = (uint32) cust_hpl_index;
 	lockhp = false;
-	Ana_Set_Reg(AUDTOP_CON5, index, mask);
+	Ana_Set_Reg(MT6350_AUDTOP_CON5, index, mask);
 	lockhp = true;
 }
 
@@ -54,7 +54,7 @@ static void setHPRGain(void) {
 	mask = 0x000000700 | 0xffff0000;
 	index = (uint32) cust_hpr_index;
 	lockhp = false;
-	Ana_Set_Reg(AUDTOP_CON5, index, mask);
+	Ana_Set_Reg(MT6350_AUDTOP_CON5, index, mask);
 	lockhp = true;
 }
 
@@ -64,8 +64,8 @@ static void setSPKGain(void) {
 	mask = 0x00000f00 | 0xffff0000;
 	index = (uint32) cust_spk_index;
 	lockspk = false;
-	Ana_Set_Reg(SPK_CON9, index, mask);
-	Ana_Set_Reg(SPK_CON9, index, mask);
+	Ana_Set_Reg(MT6350_SPK_CON9, index, mask);
+	Ana_Set_Reg(MT6350_SPK_CON9, index, mask);
 	lockspk = true;
 }
 
@@ -73,7 +73,7 @@ static ssize_t hplgain_reg_show(struct kobject *kobj, struct kobj_attribute *att
 {
 	uint32 currentVol;
 	int val;
-	currentVol = Ana_Get_Reg(AUDTOP_CON5) >> 12;
+	currentVol = Ana_Get_Reg(MT6350_AUDTOP_CON5) >> 12;
 	currentVol &= 0x7;
 	val = (int) currentVol;
 	return sprintf(buf, "%d\n", val);
@@ -83,7 +83,7 @@ static ssize_t hprgain_reg_show(struct kobject *kobj, struct kobj_attribute *att
 {
 	uint32 currentVol;
 	int val;
-	currentVol = Ana_Get_Reg(AUDTOP_CON5) >> 8;
+	currentVol = Ana_Get_Reg(MT6350_AUDTOP_CON5) >> 8;
 	currentVol &= 0x7;
 	val = (int) currentVol;
 	return sprintf(buf, "%d\n", val);
@@ -113,7 +113,7 @@ static ssize_t spk_reg_show(struct kobject *kobj, struct kobj_attribute *attr, c
 {
 	uint32 currentVol;
 	int val;
-	currentVol = Ana_Get_Reg(SPK_CON9) >> 8;
+	currentVol = Ana_Get_Reg(MT6350_SPK_CON9) >> 8;
 	val = (int) currentVol;
 	return sprintf(buf, "%d\n", val);
 }
@@ -135,17 +135,17 @@ static ssize_t thundersonic_version_show(struct kobject *kobj, struct kobj_attri
 
 static struct kobj_attribute hplgain_attribute =
 	__ATTR(hpl_gain,
-		0666,
+		0644,
 		hplgain_reg_show, hplgain_reg_store);
 
 static struct kobj_attribute hprgain_attribute =
 	__ATTR(hpr_gain,
-		0666,
+		0644,
 		hprgain_reg_show, hprgain_reg_store);
 
 static struct kobj_attribute spkgain_attribute =
 	__ATTR(spk_gain,
-		0666,
+		0644,
 		spk_reg_show, spk_reg_store);
 
 static struct kobj_attribute thundersonic_version_attribute =
