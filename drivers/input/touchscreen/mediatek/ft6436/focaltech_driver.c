@@ -1493,7 +1493,6 @@ extern u8 fts_ctpm_update_project_setting(struct i2c_client *client);
  
  static int tpd_local_init(void)
  {
-  TPD_DMESG("Focaltech fts I2C Touchscreen Driver (Built %s @ %s)\n", __DATE__, __TIME__);
   #if 0
   printk(" TPD FT6436 tpd_local_init regulator_get !\n");
 	tpd->reg=regulator_get(tpd->tpd_dev,"vgp1"); // get pointer to regulator structure
