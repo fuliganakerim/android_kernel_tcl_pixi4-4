@@ -66,7 +66,7 @@ static void zen_add_request(struct request_queue *q, struct request *rq)
 	const int sync = rq_is_sync(rq);
 
 	if (zdata->fifo_expire[sync]) {
-		rq->fifo_time = jiffies zdata->fifo_expire[sync]);
+		rq->fifo_time = jiffies + zdata->fifo_expire[sync];
 		list_add_tail(&rq->queuelist, &zdata->fifo_list[sync]);
 	}
 }
