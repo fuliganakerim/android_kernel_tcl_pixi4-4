@@ -18,9 +18,9 @@ DEFCONFIG="pixi4_4_8g1g_defconfig"
 
 # BlackThunder Kernel Details
 KERNEL_NAME="BlackThunder"
-VER="v1.1"
+VER="v1.2"
 BASE_BT_VER="BT"
-BT_VER="$BASE_BT_VER$VER"
+BT_VER="$BASE_BT_VER$VER-$( TZ=MST date +%Y%m%d )"
 
 # Vars
 export ARCH=arm
