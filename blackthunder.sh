@@ -19,14 +19,16 @@ DEFCONFIG="pixi4_4_8g1g_defconfig"
 # BlackThunder Kernel Details
 KERNEL_NAME="BlackThunder"
 VER="v1.2"
-BASE_BT_VER="BT"
-BT_VER="$BASE_BT_VER$VER-$( TZ=MST date +%Y%m%d )"
+BASE_VER="BT"
+DEVICE="pixi4_4"
+BT_VER=$BASE_VER$VER-${DEVICE}-$( TZ=MST date +%Y%m%d-%H%M )
+
 
 # Vars
 export ARCH=arm
 export KBUILD_BUILD_USER=kirito9
-export KBUILD_BUILD_HOST=teampanther
-export CROSS_COMPILE=~/android/toolchain/arm-eabi-4.8/bin/arm-eabi-
+export KBUILD_BUILD_HOST=aincrad
+export CROSS_COMPILE=~/android/toolchain/arm-eabi-5.3/bin/arm-eabi-
 
 # Paths
 KERNEL_DIR=`pwd`
@@ -35,6 +37,7 @@ ANYKERNEL_DIR="$RESOURCE_DIR/BT-pixi4_4-AnyKernel2"
 REPACK_DIR="$ANYKERNEL_DIR"
 ZIP_MOVE="$RESOURCE_DIR/BT-releases/pixi4_4/"
 ZIMAGE_DIR="$KERNEL_DIR/arch/arm/boot"
+OLD_DIR="$ZIP_MOVE/old"
 
 # Functions
 function clean_all {
@@ -52,8 +55,13 @@ function make_kernel {
 
 function make_zip {
 		cd $REPACK_DIR
-		zip -9 -r `echo $BT_VER`.zip .
-		mv  `echo $BT_VER`.zip $ZIP_MOVE
+		zip -9 -r `echo $BT_VER`.zip .		
+		if [[ ! -d "${OLD_DIR}" ]]; then
+			 mkdir -p "${OLD_DIR}"
+		fi				
+		cd $ZIP_MOVE
+		mv *.zip old
+		mv "${REPACK_DIR}"/*.zip "${ZIP_MOVE}"		
 		cd $KERNEL_DIR
 }
 
