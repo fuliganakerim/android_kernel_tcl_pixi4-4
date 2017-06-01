@@ -14,7 +14,7 @@ clear
 # Resources
 THREAD="-j4"
 KERNEL="zImage-dtb"
-DEFCONFIG="pixi4_4_8g1g_defconfig"
+DEFCONFIG="blackthunder_pixi4_4_8g1g_defconfig"
 
 # BlackThunder Kernel Details
 KERNEL_NAME="BlackThunder"

@@ -24,6 +24,7 @@
  *
  */
 
+#include <linux/module.h>
 #include <linux/cpu.h>
 #include <linux/cpumask.h>
 #include <linux/cpufreq.h>
@@ -693,9 +694,6 @@ static int cpufreq_governor_smartass2(struct cpufreq_policy *new_policy,
 						&smartass2_attr_group);
 			if (rc)
 				return rc;
-
-			pm_idle_old = pm_idle;
-			pm_idle = cpufreq_idle;
 		}
 
 		if (this_smartass2->cur_policy->cur < new_policy->max && !timer_pending(&this_smartass2->timer))
@@ -732,7 +730,6 @@ static int cpufreq_governor_smartass2(struct cpufreq_policy *new_policy,
 		if (atomic_dec_return(&active_count) <= 1) {
 			sysfs_remove_group(cpufreq_global_kobject,
 					   &smartass2_attr_group);
-			pm_idle = pm_idle_old;
 		}
 		break;
 	}
@@ -788,7 +785,7 @@ static void smartass2_late_resume(struct early_suspend *handler) {
 	for_each_online_cpu(i)
 		smartass2_suspend(i,0);
 }
-
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend smartass2_power_suspend = {
 	.suspend = smartass2_early_suspend,
 	.resume = smartass2_late_resume,
@@ -796,6 +793,7 @@ static struct early_suspend smartass2_power_suspend = {
 	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
 #endif
 };
+#endif
 
 static int __init cpufreq_smartass2_init(void)
 {
