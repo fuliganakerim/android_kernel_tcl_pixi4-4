@@ -2223,8 +2223,6 @@ again:
 #endif
 				}
 			}
-			if (signal_pending(current)
-			    ||  mutex_lock_interruptible(&u->readlock)) {
 			if (signal_pending(current)) {
 				err = sock_intr_errno(timeo);
 				goto out;
