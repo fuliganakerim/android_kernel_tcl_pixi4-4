@@ -2214,7 +2214,6 @@ again:
 #ifdef CONFIG_MTK_NET_LOGGING
 			unsigned long sk_ino = SOCK_INODE(sk->sk_socket)->i_ino;
 
-<<<<<<< HEAD
 			pr_debug("[mtk_net][unix]: recvmsg[%lu:null]:exit read due to timeout\n", sk__ino);
 #endif
 					}
@@ -2226,9 +2225,7 @@ again:
 			}
 			if (signal_pending(current)
 			    ||  mutex_lock_interruptible(&u->readlock)) {
-=======
 			if (signal_pending(current)) {
->>>>>>> 2950f7c... af_unix: Revert 'lock_interruptible' in stream receive code
 				err = sock_intr_errno(timeo);
 				goto out;
 			}
