@@ -571,7 +571,7 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
 #endif /* CONFIG_SWAP*/
 			mss->swap += PAGE_SIZE;
 #ifdef CONFIG_SWAP
-			entry = pte_to_swp_entry(ptent);
+			entry = pte_to_swp_entry(pte);
 			if (non_swap_entry(entry))
 				return;
 			p = swap_info_get(entry);
@@ -584,11 +584,11 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
 #ifdef CONFIG_ZNDSWAP
 				/* It indicates 2ndswap ONLY */
 				if (swp_type(entry) == 1UL)
-					mss->pswap_zndswap += (ptent_size << PSS_SHIFT) / swapcount;
+					mss->pswap_zndswap += (PAGE_SIZE << PSS_SHIFT) / swapcount;
 				else
-					mss->pswap += (ptent_size << PSS_SHIFT) / swapcount;
+					mss->pswap += (PAGE_SIZE << PSS_SHIFT) / swapcount;
 #else
-				mss->pswap += (ptent_size << PSS_SHIFT) / swapcount;
+				mss->pswap += (PAGE_SIZE << PSS_SHIFT) / swapcount;
 #endif
 				swap_info_unlock(p);
 			}
