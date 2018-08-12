@@ -16,7 +16,7 @@ DEFCONFIG="blackthunder_pixi4_4_8g1g_defconfig"
 #TOOLCHAIN_DIR=${TOOLCHAIN_PREFIX}
 
 KERNEL_NAME="BlackThunder"
-VER="v1.0"
+VER="v1.3"
 LOCALVERSION="-$( date +%Y%m%d )"
 DEVICE="pixi4_4"
 BASE_BT_VER="BT"
@@ -52,7 +52,6 @@ cp -vr $ZIMAGE_DIR/$KERNEL $REPACK_DIR
 cd $REPACK_DIR
 rm -rf .git
 zip -9 -r `echo $BT_VER`.zip .
-mv  `echo $BT_VER`.zip $REPACK_DIR
 cd $ANYKERNEL_DIR
 curl --upload-file `echo $BT_VER`.zip https://transfer.sh/`echo $BT_VER`.zip 
 cd $KERNEL_DIR
