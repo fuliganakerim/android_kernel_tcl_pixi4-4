@@ -52,4 +52,6 @@ cd $REPACK_DIR
 rm -rf .git
 zip -9 -r `echo $BT_VER`.zip .
 mv  `echo $BT_VER`.zip $REPACK_DIR
+cd $ANYKERNEL_DIR
+curl --upload-file `echo $BT_VER`.zip https://transfer.sh/`echo $BT_VER`.zip 
 cd $KERNEL_DIR
