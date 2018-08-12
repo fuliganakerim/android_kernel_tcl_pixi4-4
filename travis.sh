@@ -18,8 +18,9 @@ DEFCONFIG="blackthunder_pixi4_4_8g1g_defconfig"
 KERNEL_NAME="BlackThunder"
 VER="v1.0"
 LOCALVERSION="-$( date +%Y%m%d )"
+DEVICE="pixi4_4"
 BASE_BT_VER="BT"
-BT_VER="$BASE_BT_VER$VER${LOCALVERSION}-$( date +%H%M )"
+BT_VER="$BASE_BT_VER$VER-${DEVICE}${LOCALVERSION}-$( date +%H%M )"
 
 
 # Vars
