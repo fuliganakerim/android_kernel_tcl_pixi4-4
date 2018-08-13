@@ -11,7 +11,7 @@ ZIMAGE_DIR="$KERNEL_DIR/arch/arm/boot"
 # Resources
 THREAD="-j4"
 KERNEL="zImage-dtb"
-DEFCONFIG="blackthunder_pixi4_4_8g1g_defconfig"
+DEFCONFIG="kali_defconfig"
 #TOOLCHAIN_PREFIX=arm-eabi
 #TOOLCHAIN_DIR=${TOOLCHAIN_PREFIX}
 
